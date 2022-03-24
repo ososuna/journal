@@ -1,6 +1,6 @@
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { login } from '../../actions/auth';
+import { startLoginEmailPassword } from '../../actions/auth';
 import { useForm } from '../../hooks/useForm';
 
 export const LoginPage = () => {
@@ -16,7 +16,7 @@ export const LoginPage = () => {
   
   const handlelogin = ( e ) => {
     e.preventDefault();
-    dispatch( login(123, 'rengoku') )
+    dispatch( startLoginEmailPassword( email, password ));
   }
 
   return (
