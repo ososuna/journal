@@ -1,4 +1,4 @@
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import validator from 'validator';
 import { removeError, setError } from '../../actions/ui';
@@ -7,6 +7,8 @@ import { useForm } from '../../hooks/useForm';
 export const RegisterPage = () => {
   
   const dispatch = useDispatch();
+
+  const { msgError } = useSelector( state => state.ui );
 
   const [ formValues, handleInputChange ] = useForm({
     name: 'rengoku',
@@ -48,10 +50,15 @@ export const RegisterPage = () => {
     <>
       <h3 className="auth__title">register</h3>
       <form onSubmit={ handleRegister }>
-        <div className="auth__alert-error">
-          error
-        </div>
-        
+        {
+          msgError &&
+          (
+            <div className="auth__alert-error">
+              { msgError }
+            </div>
+          )
+        }
+
         <input
           type="text"
           placeholder="name"
