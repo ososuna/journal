@@ -1,9 +1,29 @@
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom"
+import { useEffect } from 'react';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 
-import { JournalPage } from "../components/journal/JournalPage"
-import { AuthRouter } from "./AuthRouter"
+import { firebase } from '../firebase/firebaseConfig';
+
+import { JournalPage } from '../components/journal/JournalPage';
+import { AuthRouter } from './AuthRouter';
+import { login } from '../actions/auth';
 
 export const AppRouter = () => {
+  
+  const dispatch = useDispatch();
+  
+  useEffect(() => {
+
+    firebase.auth().onAuthStateChanged( (user) => {
+      
+      if ( user?.uid ) {
+        dispatch( login(user.uid, user.displayName) );
+      }
+
+    });
+  
+  }, [ dispatch ]);
+  
   return (
     <BrowserRouter>
       <Routes>
