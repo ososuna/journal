@@ -7,13 +7,14 @@ import { firebase } from '../firebase/firebaseConfig';
 import { JournalPage } from '../components/journal/JournalPage';
 import { AuthRouter } from './AuthRouter';
 import { login } from '../actions/auth';
+import { PrivateRoute } from './PrivateRoute';
+import { PublicRoute } from './PublicRoute';
 
 export const AppRouter = () => {
   
   const dispatch = useDispatch();
   
   const [checking, setChecking] = useState( true );
-  const [loggedIn, setLoggedIn] = useState( false );
 
   useEffect(() => {
 
@@ -21,16 +22,13 @@ export const AppRouter = () => {
       
       if ( user?.uid ) {
         dispatch( login(user.uid, user.displayName) );
-        setLoggedIn( true );
-      } else {
-        setLoggedIn( false );
       }
 
       setChecking( false );
 
     });
   
-  }, [ dispatch, setChecking, setLoggedIn ]);
+  }, [ dispatch, setChecking ]);
   
   if ( checking ) {
     return (
@@ -41,8 +39,19 @@ export const AppRouter = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/auth/*" element={ <AuthRouter /> } />
-        <Route path="/" element={ <JournalPage /> } />
+
+        <Route path="/auth/*" element={
+          <PublicRoute>
+            <AuthRouter /> 
+          </PublicRoute>
+          } 
+        />
+        <Route path="/" element={
+          <PrivateRoute>
+            <JournalPage />
+          </PrivateRoute>
+          } 
+        />
         <Route path="/*" element={ <Navigate to="/" /> }/>
       </Routes>
     </BrowserRouter>
